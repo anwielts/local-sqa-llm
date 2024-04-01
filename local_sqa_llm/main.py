@@ -1,6 +1,7 @@
-import typer
+import os
 
 import ollama
+import typer
 
 
 # instructon prompts for the LLM to focus on one aspect of code quality
@@ -11,13 +12,13 @@ INSTRUCTION_PROMPTS = {
 }
 
 
-def generate_llm_prediction(model: str, instruction_prompt: str, streaming: bool = True):
+def generate_llm_prediction(input_content:str , model: str, instruction_prompt: str, streaming: bool = True):
     if streaming:
         print('Streaming')
-        print(f'{INSTRUCTION_PROMPTS[instruction_prompt]} pw: \'123456\'\n string = pw + \'7\'')
+        print(f'{INSTRUCTION_PROMPTS[instruction_prompt]} {input_content}')
         stream = ollama.chat(
             model=model,
-            messages=[{'role': 'user', 'content': f'{INSTRUCTION_PROMPTS[instruction_prompt]} pw: \'123456\'\n string = pw + \'7\''}],
+            messages=[{'role': 'user', 'content': f'{INSTRUCTION_PROMPTS[instruction_prompt]} {input_content}'}],
             stream=True,
         )
         
@@ -27,26 +28,39 @@ def generate_llm_prediction(model: str, instruction_prompt: str, streaming: bool
         response = ollama.chat(model=model, messages=[
             {
                 'role': 'user',
-                'content': f'{INSTRUCTION_PROMPTS[instruction_prompt]} pw: \'123456\'\n string = pw + \'7\'',
+                'content': f'{INSTRUCTION_PROMPTS[instruction_prompt]} {input_content}',
             },
         ])
 
         return response
+    
+
+def read_content_to_check(path: str):
+    full_path = os.path.join(os.getcwd(), path)
+    with open(full_path) as input_content:
+        content = input_content.read()
+
+    return content
 
 
-def main(model: str = "codellama:7b-python", instructions: str = 'all', output_dest: str = "cli"):
+def main(path_to_content: str,
+         model: str = "codellama:7b-python",
+         output_dest: str = "cli",
+         instructions: str = 'all', ):
     """
     Usage:
         --model: str, the model to use.
         --output_dest: str, the destiantion of the model's output. Defaults to cli
     """
     print(f"Use model {model} with output destination {output_dest}")
+    print(path_to_content)
+    input_content_to_check = read_content_to_check(path_to_content)
     if output_dest == "cli":
-        stream_generator = generate_llm_prediction(model, instructions)
+        stream_generator = generate_llm_prediction(input_content_to_check, model, instructions)
         for chunk in stream_generator:
             print(chunk['message']['content'], end='', flush=True)
     else:
-        complete_response = generate_llm_prediction(model, instructions, streaming=False)
+        complete_response = generate_llm_prediction(input_content_to_check, model, instructions, streaming=False)
         print(complete_response['message']['content'])
         # TODO: Handle non cli ouptut in the correct way (e.g. write conten to file)
         

@@ -1,3 +1,7 @@
-# ignoe python envs
+# ignore python envs
 /venv
 /envs
+
+# ignoe python package build output
+/build
+*.egg-info/
