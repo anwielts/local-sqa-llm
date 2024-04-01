@@ -44,13 +44,15 @@ def read_content_to_check(path: str):
 
 
 def main(path_to_content: str,
-         model: str = "codellama:7b-python",
+         model: str,
          output_dest: str = "cli",
          instructions: str = 'all', ):
     """
     Usage:
+        --path_to_content: str, path to the file which should be checked.
         --model: str, the model to use.
-        --output_dest: str, the destiantion of the model's output. Defaults to cli
+        --output_dest: str, the destiantion of the model's output. Defaults to cli.
+        --instructions: str, which instructions the model should follow. Defaults to all.
     """
     print(f"Use model {model} with output destination {output_dest}")
     print(path_to_content)
