@@ -1,16 +1,16 @@
-import argparse
+import typer
 
 import ollama
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("model", nargs="*")
-    parser.add_argument("output_dest", nargs="*")
-    args = parser.parse_args()
-
-    print(args)
+def main(model: str, output_dest: str = "cli"):
+    """
+    Usage:
+        --model: str, the model to use.
+        --output_dets: str, the destiantion of the model's output. Defaults to cli
+    """
+    print(f"Use model {model} with output destination {output_dest}")
 
     
 if __name__ == "__main__":
-    main()
+    typer.run(main)
