@@ -49,6 +49,7 @@ def main(model: str = "codellama:7b-python", instructions: str = 'all', output_d
         complete_response = generate_llm_prediction(model, instructions, streaming=False)
         print(complete_response['message']['content'])
         # TODO: Handle non cli ouptut in the correct way (e.g. write conten to file)
+        
 
     
 if __name__ == "__main__":
