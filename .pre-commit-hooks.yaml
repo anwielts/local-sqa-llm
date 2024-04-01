@@ -1,0 +1,7 @@
+# .pre-commit-hooks.yaml
+- id: local-sqa-llm
+  name: local-sqa-llm
+  description: Use locally running LLMs for software quality assurance
+  entry: local-sqa-llm
+  language: python
+  always_run: false
